@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias ErrorContentWithCase<ErrorCase: ErrorCaseable> = (errorContent: ErrorCase.ErrorContent, errorCase: ErrorCase)
+
 public extension Error {
     /// error를 contentType, caseType 으로 매핑
     ///
@@ -29,7 +31,7 @@ public extension Error {
     /// ```
     func mapTo<ErrorCase: ErrorCaseable>(
         type errorCaseType: ErrorCase.Type
-    ) -> (errorContent: ErrorCase.ErrorContent, errorCase: ErrorCase)? {
+    ) -> ErrorContentWithCase<ErrorCase>? {
         guard let errorContent = self as? ErrorCase.ErrorContent else {
             return nil
         }
