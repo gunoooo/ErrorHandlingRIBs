@@ -9,11 +9,11 @@
 import Foundation
 import RIBs
 
-public protocol HasInteractorDependency {
+public protocol HasInteractorDependency: HasDependency {
     var interactorDependency: InteractorDependency { get }
 }
 
-extension HasInteractorDependency where Self: HasDependency {
+extension HasInteractorDependency {
     var interactorDependency: InteractorDependency {
         guard let interactorDependency = dependency as? InteractorDependency else {
             fatalError("\(dependency) should conform to \(InteractorDependency.self)")
