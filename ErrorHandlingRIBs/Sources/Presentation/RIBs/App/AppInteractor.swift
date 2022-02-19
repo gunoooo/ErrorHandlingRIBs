@@ -10,9 +10,13 @@ import UIKit
 import RIBs
 import RxSwift
 
-protocol AppRouting: Routing {}
+protocol AppRouting: Routing {
+    func attachRoot(window: UIWindow)
+}
 
-protocol AppInteractorDependency: ErrorHandlingInteractorDependency {}
+protocol AppInteractorDependency: ErrorHandlingInteractorDependency {
+    var window: UIWindow? { get set }
+}
 
 final class AppInteractor: Interactor,
                            AppInteractable,
@@ -31,6 +35,12 @@ final class AppInteractor: Interactor,
 
     override func didBecomeActive() {
         super.didBecomeActive()
+        
+        errorStream
+            .subscribe(onNext: { _ in
+                // TODO: 핸들링되지 않은 에러 처리
+            })
+            .disposeOnDeactivate(interactor: self)
     }
 
     override func willResignActive() {
@@ -43,6 +53,15 @@ final class AppInteractor: Interactor,
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
     ) -> Bool {
-        return false
+        let window = UIWindow()
+        dependency.window = window
+        router?.attachRoot(window: window)
+        return true
+    }
+    
+    // MARK: RootListener
+    
+    func exitApp() {
+        exit(-1)
     }
 }

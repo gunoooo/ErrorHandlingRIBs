@@ -6,6 +6,7 @@
 //  Copyright © 2022 com.gunoooo. All rights reserved.
 //
 
+import UIKit
 import RIBs
 
 final class AppComponent: Component<EmptyDependency>,
@@ -16,12 +17,22 @@ final class AppComponent: Component<EmptyDependency>,
             .init()
         }
     }
+    
+    var window: UIWindow?
+    
+    init(
+        dependency: EmptyDependency,
+        window: UIWindow?
+    ) {
+        self.window = window
+        super.init(dependency: dependency)
+    }
 }
 
 // MARK: - Builder
 
 protocol AppBuildable: Buildable {
-    func build() -> (routing: AppRouting, lifecycleDelegate: AppLifecycleDelegate)
+    func build(withWindow window: UIWindow?) -> (routing: AppRouting, lifecycleDelegate: AppLifecycleDelegate)
 }
 
 final class AppBuilder: Builder<EmptyDependency>, AppBuildable {
@@ -30,10 +41,14 @@ final class AppBuilder: Builder<EmptyDependency>, AppBuildable {
         super.init(dependency: dependency)
     }
 
-    func build() -> (routing: AppRouting, lifecycleDelegate: AppLifecycleDelegate) {
-        let component = AppComponent(dependency: dependency)
+    func build(withWindow window: UIWindow?) -> (routing: AppRouting, lifecycleDelegate: AppLifecycleDelegate) {
+        let component = AppComponent(dependency: dependency, window: window)
         let interactor = AppInteractor(dependency: component)
-        let router = AppRouter(interactor: interactor)
+        
+        let rootBuilder = RootBuilder(dependency: component)
+        
+        let router = AppRouter(interactor: interactor, rootBuilder: rootBuilder)
+        
         return (router, interactor)
     }
 }
