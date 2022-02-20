@@ -6,7 +6,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    private lazy var interactor = AppBuilder(dependency: EmptyComponent()).build(withWindow: window)
+    private lazy var interactor = AppBuilder().build(withWindow: window)
 
     func application(
         _ application: UIApplication,

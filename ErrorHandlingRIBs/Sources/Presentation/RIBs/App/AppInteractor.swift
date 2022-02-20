@@ -14,15 +14,14 @@ protocol AppRouting: Routing {
     func attachRoot(window: UIWindow)
 }
 
-protocol AppInteractorDependency: ErrorHandlingInteractorDependency {
+protocol AppInteractorDependency: HasErrorStream {
     var window: UIWindow? { get set }
 }
 
 final class AppInteractor: Interactor,
                            AppInteractable,
                            AppLifecycleDelegate,
-                           HasInteractorDependency,
-                           HasInteractorErrorStream {
+                           HasInteractorDependency {
 
     weak var router: AppRouting?
     
@@ -36,10 +35,15 @@ final class AppInteractor: Interactor,
     override func didBecomeActive() {
         super.didBecomeActive()
         
-        errorStream
-            .subscribe(onNext: { _ in
-                // TODO: 핸들링되지 않은 에러 처리
-            })
+        dependency.errorStream
+            .subscribe { [weak self] error in
+                self?.dependency.errorStream.startedPoint?.onNext(
+                    UnhandledError(
+                        message: "오류가 발생하였습니다. 이용에 불편을 드려 죄송합니다.",
+                        detailMessage: error.localizedDescription
+                    )
+                )
+            }
             .disposeOnDeactivate(interactor: self)
     }
 
@@ -53,7 +57,7 @@ final class AppInteractor: Interactor,
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
     ) -> Bool {
-        let window = UIWindow()
+        let window = dependency.window ?? UIWindow()
         dependency.window = window
         router?.attachRoot(window: window)
         return true

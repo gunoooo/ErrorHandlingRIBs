@@ -44,7 +44,10 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
     override func didBecomeActive() {
         super.didBecomeActive()
         
-        errorStream.mapTo(type: RootErrorCase.self)
+        errorStream
+            .mapTo(type: RootErrorCase.self, unhandled: { unhandledError in
+                // TODO: 알럿처리
+            })
             .subscribe(onNext: { [weak self] errorContent, errorCase in
                 switch errorCase {
                     case .SecureError:

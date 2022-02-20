@@ -18,4 +18,23 @@ import RxSwift
 public typealias InteractorError = (Error, ErrorStream)
 
 /// `Interactor`에서 핸들링될 에러의 스트림
-public typealias InteractorErrorStream = Observable<InteractorError>
+public struct InteractorErrorStream: Stream {
+    
+    public typealias Element = InteractorError
+    
+    public var value: Observable<Element>
+    
+    init(_ value: Observable<Element>) {
+        self.value = value
+    }
+}
+
+extension InteractorErrorStream {
+    func doWhenUnhandledError(_ onNext: @escaping ((UnhandledError) -> Void)) -> Observable<Element> {
+        value.do(onNext: { error, errorStream in
+            if let unhandledError = error as? UnhandledError {
+                onNext(unhandledError)
+            }
+        })
+    }
+}

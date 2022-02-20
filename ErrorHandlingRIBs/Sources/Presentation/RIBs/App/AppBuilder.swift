@@ -9,23 +9,21 @@
 import UIKit
 import RIBs
 
-final class AppComponent: Component<EmptyDependency>,
+final class AppComponent: EmptyComponent,
+                          HasErrorStream,
                           AppInteractorDependency {
     
-    var errorStream: ErrorStream {
-        shared {
-            .init()
-        }
+    var errorStream: ErrorStream
+    
+    var parentErrorStream: ErrorStream {
+        return errorStream
     }
     
     var window: UIWindow?
     
-    init(
-        dependency: EmptyDependency,
-        window: UIWindow?
-    ) {
+    init(window: UIWindow?) {
+        errorStream = .init()
         self.window = window
-        super.init(dependency: dependency)
     }
 }
 
@@ -37,12 +35,12 @@ protocol AppBuildable: Buildable {
 
 final class AppBuilder: Builder<EmptyDependency>, AppBuildable {
 
-    override init(dependency: EmptyDependency) {
-        super.init(dependency: dependency)
+    init() {
+        super.init(dependency: EmptyComponent())
     }
 
     func build(withWindow window: UIWindow?) -> (routing: AppRouting, lifecycleDelegate: AppLifecycleDelegate) {
-        let component = AppComponent(dependency: dependency, window: window)
+        let component = AppComponent(window: window)
         let interactor = AppInteractor(dependency: component)
         
         let rootBuilder = RootBuilder(dependency: component)
