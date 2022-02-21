@@ -28,13 +28,3 @@ public struct InteractorErrorStream: Stream {
         self.value = value
     }
 }
-
-extension InteractorErrorStream {
-    func doWhenUnhandledError(_ onNext: @escaping ((UnhandledError) -> Void)) -> Observable<Element> {
-        value.do(onNext: { error, errorStream in
-            if let unhandledError = error as? UnhandledError {
-                onNext(unhandledError)
-            }
-        })
-    }
-}

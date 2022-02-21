@@ -33,12 +33,3 @@ fileprivate extension ErrorStream {
         )
     }
 }
-
-//fileprivate extension ObservableType where Element: Error {
-//    /// `ErrorStream`을 현재의 스트림에 붙이고 `InteractorErrorStream` 형태로 Return 한다
-//    func combine(errorStream: ErrorStream) -> InteractorErrorStream {
-//        return map { element -> InteractorError in
-//            return (element, errorStream)
-//        }
-//    }
-//}

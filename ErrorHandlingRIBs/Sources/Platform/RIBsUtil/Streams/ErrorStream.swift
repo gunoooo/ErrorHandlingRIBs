@@ -9,7 +9,7 @@
 import RxSwift
 
 /// Stream 형태의 `Error`
-public struct ErrorStream: MutableStream {
+public class ErrorStream: MutableStream {
     
     public typealias Element = Error
     
@@ -18,18 +18,18 @@ public struct ErrorStream: MutableStream {
     }
     
     /// 에러가 최초 발생된 RIB의 error stream
-    public var startedPoint: PublishSubject<Element>?
+    public weak var startedPoint: PublishSubject<Element>?
     
     public func accept(_ element: Error) {
         _value.onNext(element)
     }
     
-    public mutating func accept(_ element: Element, startedPoint: PublishSubject<Element>) {
+    public func accept(_ element: Element, startedPoint: PublishSubject<Element>) {
         self.startedPoint = startedPoint
         _value.onNext(element)
     }
     
-    public mutating func create(_ element: Element) {
+    public func create(_ element: Element) {
         self.startedPoint = _value
         _value.onNext(element)
     }

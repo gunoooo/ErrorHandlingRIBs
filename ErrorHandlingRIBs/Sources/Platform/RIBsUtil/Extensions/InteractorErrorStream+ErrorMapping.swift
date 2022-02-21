@@ -12,14 +12,10 @@ public extension InteractorErrorStream {
     /// 에러 매핑 함수
     /// `type` 형태로 에러를 매핑하고, 타입이 맞지 않은 에러는 `ErrorStream`으로 보내줌
     ///
-    /// `unhandled` : 현재 RIB에서 발생된 에러가 `Error Scope` 에 포함되지 않는 경우 이벤트
-    ///
     /// ```swift
     ///     errorStream
-    ///         .mapTo(type: LoginErrorCase.self, unhandled: { unhandledError in
-    ///             // show alert
-    ///         })
-    ///         .map { errorContent, errorCase in
+    ///         .mapTo(type: LoginErrorCase.self)
+    ///         .handle { errorContent, errorCase in
     ///             switch errorCase {
     ///             case .IDError:
     ///                 break
@@ -33,16 +29,8 @@ public extension InteractorErrorStream {
     ///
     /// - returns:
     /// `E 타입으로 매핑된 에러`
-    func mapTo<ErrorCase: ErrorCaseable>(
-        type errorCaseType: ErrorCase.Type,
-        unhandled: ((UnhandledError) -> Void)? = nil
-    ) -> Observable<ErrorContentWithCase<ErrorCase>> {
+    func mapTo<ErrorCase: ErrorCaseable>(type errorCaseType: ErrorCase.Type) -> Observable<ErrorContentWithCase<ErrorCase>> {
         return value
-            .do(onNext: { error, errorStream in
-                if let unhandledError = error as? UnhandledError {
-                    unhandled?(unhandledError)
-                }
-            })
             .compactMap { element, errorStream -> ErrorContentWithCase? in
                 guard let error = element.mapTo(type: errorCaseType.self) else {
                     errorStream.accept(element)
@@ -56,8 +44,9 @@ public extension InteractorErrorStream {
     /// `type` 형태로 에러를 매핑하고, 타입이 맞지 않은 에러는 `ErrorStream`으로 보내줌
     ///
     /// ```swift
-    ///     errorStream.mapWith(type: LoginErrorCase.self)
-    ///         .map { errorContentWithCase, errorStream in
+    ///     errorStream
+    ///         .mapWith(type: LoginErrorCase.self)
+    ///         .handle { errorContentWithCase, errorStream in
     ///             switch errorContentWithCase.errorCase {
     ///             case .IDError:
     ///                 break

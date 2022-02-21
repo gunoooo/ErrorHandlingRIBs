@@ -45,16 +45,20 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
         super.didBecomeActive()
         
         errorStream
-            .mapTo(type: RootErrorCase.self, unhandled: { unhandledError in
+            .handle { unhandledError in
                 // TODO: 알럿처리
-            })
-            .subscribe(onNext: { [weak self] errorContent, errorCase in
+            }
+            .disposeOnDeactivate(interactor: self)
+        
+        errorStream
+            .mapTo(type: RootErrorCase.self)
+            .handle { [weak self] errorContent, errorCase in
                 switch errorCase {
                     case .SecureError:
                         // TODO: 알럿처리
                         self?.listener?.exitApp()
                 }
-            })
+            }
             .disposeOnDeactivate(interactor: self)
     }
 

@@ -8,9 +8,7 @@
 
 import Foundation
 
-public struct UnhandledError: Error,
-                              HasMessage,
-                              HasDetailMessage {
+public struct UnhandledError: Error {
     
     public var message: String
     
