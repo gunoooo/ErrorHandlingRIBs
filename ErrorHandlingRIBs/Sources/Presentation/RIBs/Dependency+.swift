@@ -9,6 +9,14 @@
 import RIBs
 
 protocol Dependency: RIBs.Dependency,
-                     HasErrorStream {}
+                     HasHandleableErrorStream {}
 
-extension Component: Dependency {}
+class Component<DependencyType>: RIBs.Component<DependencyType>, Dependency {
+    
+    var errorStream: HandleableErrorStream {
+        guard let errorStream = (dependency as? HasHandleableErrorStream)?.errorStream else {
+            fatalError("\(dependency) should conform to \(HasHandleableErrorStream.self)")
+        }
+        return errorStream
+    }
+}

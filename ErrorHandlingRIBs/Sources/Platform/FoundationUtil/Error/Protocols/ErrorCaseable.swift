@@ -29,7 +29,7 @@ public protocol ErrorCaseable: CaseIterable {
 
 public extension ErrorCaseable {
     static func make(from error: Error) -> Self? {
-        self.allCases
+        return self.allCases
             .filter {
                 return "\($0)" == "\(type(of: error).self)"
             }

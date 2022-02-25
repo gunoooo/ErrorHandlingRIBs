@@ -8,15 +8,15 @@
 
 import Foundation
 
-/// 부모 `ErrorStream`을 제공하는 프로토콜
-public protocol HasParentErrorStream {
-    var parentErrorStream: ErrorStream { get }
+/// 부모 `HandleableErrorStream`을 제공하는 프로토콜
+public protocol HasHandleableParentErrorStream {
+    var parentErrorStream: HandleableErrorStream { get }
 }
 
-public extension HasParentErrorStream where Self: HasDependency {
-    var parentErrorStream: ErrorStream {
-        guard let errorStream = (dependency as? HasErrorStream)?.errorStream else {
-            fatalError("\(dependency) should conform to \(HasErrorStream.self)")
+public extension HasHandleableParentErrorStream where Self: HasDependency {
+    var parentErrorStream: HandleableErrorStream {
+        guard let errorStream = (dependency as? HasHandleableErrorStream)?.errorStream else {
+            fatalError("\(dependency) should conform to \(HasHandleableErrorStream.self)")
         }
         return errorStream
     }

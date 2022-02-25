@@ -8,9 +8,17 @@
 
 import Foundation
 
-enum RootErrorCase: ErrorCaseable {
+enum RootErrorCase {
     
-    typealias ErrorContent = HasMessage & HasDetailMessage
+    enum Messaging: ErrorCaseable {
+        typealias ErrorContent = HasMessage
+        
+        case SecureError
+    }
     
-    case SecureError
+    enum DetailMessaging: ErrorCaseable {
+        typealias ErrorContent = HasMessage & HasDetailMessage
+        
+        case ConnectionError
+    }
 }

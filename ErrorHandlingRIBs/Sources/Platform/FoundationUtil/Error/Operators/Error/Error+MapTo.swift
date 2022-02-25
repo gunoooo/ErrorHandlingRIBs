@@ -1,14 +1,12 @@
 //
-//  Error+.swift
+//  Error+MapTo.swift
 //  ErrorHandlingRIBs
 //
-//  Created by Gunoo on 2022/02/13.
+//  Created by Gunoo on 2022/02/24.
 //  Copyright © 2022 com.gunoooo. All rights reserved.
 //
 
 import Foundation
-
-public typealias ErrorContentWithCase<ErrorCase: ErrorCaseable> = (errorContent: ErrorCase.ErrorContent, errorCase: ErrorCase)
 
 public extension Error {
     /// error를 contentType, caseType 으로 매핑
@@ -31,13 +29,13 @@ public extension Error {
     /// ```
     func mapTo<ErrorCase: ErrorCaseable>(
         type errorCaseType: ErrorCase.Type
-    ) -> ErrorContentWithCase<ErrorCase>? {
+    ) -> CaseableErrorContent<ErrorCase>? {
         guard let errorContent = self as? ErrorCase.ErrorContent else {
             return nil
         }
         guard let errorCase = errorCaseType.make(from: self) else {
             return nil
         }
-        return (errorContent, errorCase)
+        return CaseableErrorContent(errorCase: errorCase, errorContent: errorContent)
     }
 }

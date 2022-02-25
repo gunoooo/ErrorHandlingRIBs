@@ -14,7 +14,7 @@ protocol AppRouting: Routing {
     func attachRoot(window: UIWindow)
 }
 
-protocol AppInteractorDependency: HasErrorStream {
+protocol AppInteractorDependency: HasHandleableErrorStream {
     var window: UIWindow? { get set }
 }
 
@@ -36,14 +36,12 @@ final class AppInteractor: Interactor,
         super.didBecomeActive()
         
         dependency.errorStream
-            .subscribe { [weak self] error in
-                self?.dependency.errorStream.startedPoint?.onNext(
-                    UnhandledError(
-                        message: "오류가 발생하였습니다. 이용에 불편을 드려 죄송합니다.",
-                        detailMessage: error.localizedDescription
-                    )
+            .handle(with: { error in
+                return DefaultError(
+                    message: "오류가 발생하였습니다. 이용에 불편을 드려 죄송합니다.",
+                    detailMessage: error.localizedDescription
                 )
-            }
+            })
             .disposeOnDeactivate(interactor: self)
     }
 

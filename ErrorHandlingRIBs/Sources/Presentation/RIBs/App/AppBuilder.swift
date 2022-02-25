@@ -10,14 +10,9 @@ import UIKit
 import RIBs
 
 final class AppComponent: EmptyComponent,
-                          HasErrorStream,
                           AppInteractorDependency {
     
-    var errorStream: ErrorStream
-    
-    var parentErrorStream: ErrorStream {
-        return errorStream
-    }
+    var errorStream: HandleableErrorStream
     
     var window: UIWindow?
     

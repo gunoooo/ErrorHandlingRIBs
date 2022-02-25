@@ -8,8 +8,10 @@
 
 import RxSwift
 
-public extension Observable {
+public extension ObservableType where Element: CaseableErrorContentType {
     func handle(_ handler: @escaping ((Element) -> Void)) -> Disposable {
-        return subscribe(onNext: handler)
+        return subscribe(on: ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: handler)
     }
 }
