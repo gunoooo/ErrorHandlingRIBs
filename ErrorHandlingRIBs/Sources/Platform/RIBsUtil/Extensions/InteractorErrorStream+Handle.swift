@@ -22,7 +22,7 @@ public extension ErrorHandleable where Self: HasDependency & HasInteractableErro
 public extension InteractableErrorStream {
     /// DefaultError 발생시 처리 함수
     /// - handler: 현재 RIB에서 발생된 에러가 `Error Scope` 에 포함되지 않는 경우 이벤트
-    func `default`(_ handler: @escaping ((DefaultError) -> Void)) -> InteractableErrorStream {
+    func filterDefault(_ handler: @escaping ((DefaultError) -> Void)) -> InteractableErrorStream {
         return compactMap { interactableError in
             if let defaultError = interactableError.handleableError.error as? DefaultError {
                 handler(defaultError)

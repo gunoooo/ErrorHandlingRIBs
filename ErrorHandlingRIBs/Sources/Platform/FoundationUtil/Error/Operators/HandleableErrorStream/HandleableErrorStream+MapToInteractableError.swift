@@ -10,7 +10,7 @@ import RxSwift
 
 public extension HandleableErrorStream {
     func mapToInteractableError(errorStream: HandleableErrorStream) -> Observable<InteractableError> {
-        return share().map {
+        return map {
             $0.mapToInteractableError(errorStream: errorStream)
         }
     }

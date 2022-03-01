@@ -51,65 +51,24 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
     override func didBecomeActive() {
         super.didBecomeActive()
         
-//        let errorStream = errorStream
-//            .default { error in
-//                // TODO: 알럿처리
-//            }
-//
-//        errorStream
-//            .mapTo(type: RootErrorCase.Messaging.self)
-//            .handle { [weak self] caseableErrorContent in
-//                switch caseableErrorContent.errorCase {
-//                    case .SecureError:
-//                        // TODO: 알럿처리
-//                        self?.listener?.exitApp()
-//                }
-//            }
-//            .disposeOnDeactivate(interactor: self)
-//
-//        errorStream
-//            .mapTo(type: RootErrorCase.Messaging.self)
-//            .handle { [weak self] caseableErrorContent in
-//                switch caseableErrorContent.errorCase {
-//                    case .SecureError:
-//                        // TODO: 알럿처리
-//                        self?.listener?.exitApp()
-//                }
-//            }
-//            .disposeOnDeactivate(interactor: self)
-        
         errorStream
-            .default { error in
-                // TODO: 알럿처리
-            }
-            .handle(type: RootErrorCase.Messaging.self) { [weak self] error in
+            .filter(type: RootErrorCase.Messaging.self) { [weak self] error in
                 switch error.errorCase {
                     case .SecureError:
                         // TODO: 알럿처리
                         self?.listener?.exitApp()
                 }
             }
-//            .handle(type: RootErrorCase.DetailMessaging.self) { error in
-//                switch error.errorCase {
-//                    case .ConnectionError:
-//                        break
-//                }
-//            }
-            .subscribe(onNext: { _ in
-                print("123")
-            }, onError: { _ in
-                print("123")
-            }, onCompleted: {
-                print("123")
-            }, onDisposed: {
-                print("123")
-            })
+            .filter(type: RootErrorCase.DetailMessaging.self) { error in
+                switch error.errorCase {
+                    case .ConnectionError:
+                        break
+                }
+            }
+            .filterDefault { error in
+                // TODO: 알럿처리
+            }
+            .send()
             .disposeOnDeactivate(interactor: self)
-        
-//        dependency.errorStream.onNext(
-//            HandleableError(ConnectionError(message: "연결오류", detailMessage: ""), handler: self)
-//        )
-        
-        dependency.parentErrorStream.onNext(HandleableError(ConnectionError(message: "연결오류", detailMessage: ""), handler: self))
     }
 }

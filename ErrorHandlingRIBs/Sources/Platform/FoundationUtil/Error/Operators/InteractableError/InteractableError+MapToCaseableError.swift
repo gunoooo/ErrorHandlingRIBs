@@ -29,7 +29,6 @@ public extension InteractableError {
     /// `E 타입으로 매핑된 에러`
     func mapTo<ErrorCase: ErrorCaseable>(type errorCaseType: ErrorCase.Type) -> CaseableErrorContent<ErrorCase>? {
         guard let error = handleableError.error.mapTo(type: errorCaseType.self) else {
-            send()
             return nil
         }
         return error

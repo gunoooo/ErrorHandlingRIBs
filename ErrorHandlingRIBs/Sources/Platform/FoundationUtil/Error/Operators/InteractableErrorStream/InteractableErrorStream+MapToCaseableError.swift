@@ -29,15 +29,27 @@ public extension InteractableErrorStream {
     ///
     /// - returns:
     /// `E 타입으로 매핑된 에러`
-    func handle<ErrorCase: ErrorCaseable>(
+    func filter<ErrorCase: ErrorCaseable>(
         type errorCaseType: ErrorCase.Type,
         _ handler: @escaping ((CaseableErrorContent<ErrorCase>) -> Void)
     ) -> InteractableErrorStream {
-        return `do`(onNext: { interactableError in
+        return compactMap { interactableError in
             guard let caseableErrorContent = interactableError.mapTo(type: errorCaseType) else {
-                return
+                return interactableError
             }
             handler(caseableErrorContent)
+            return nil
+        }
+    }
+    
+    /// 에러 전송 함수
+    func send(before handler: ((DefaultError) -> Void)? = nil) -> Disposable {
+        return subscribe(onNext: { interactableError in
+            if let defaultError = interactableError.handleableError.error as? DefaultError {
+                handler?(defaultError)
+                return
+            }
+            interactableError.send()
         })
     }
 }
