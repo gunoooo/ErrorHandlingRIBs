@@ -36,7 +36,7 @@ final class AppInteractor: Interactor,
         super.didBecomeActive()
         
         dependency.errorStream
-            .handle(with: { error in
+            .execute(with: { error in
                 return DefaultError(
                     message: "오류가 발생하였습니다. 이용에 불편을 드려 죄송합니다.",
                     detailMessage: error.localizedDescription

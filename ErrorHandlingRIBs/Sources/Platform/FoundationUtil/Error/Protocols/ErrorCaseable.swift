@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// `Case` 화 된 에러의 프로토콜
+/// 그룹화 된 에러의 프로토콜
 ///
 /// ```swift
 ///     enum LoginErrorCase: ErrorCaseable {

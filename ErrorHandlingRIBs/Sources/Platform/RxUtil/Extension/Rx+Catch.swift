@@ -17,7 +17,7 @@ public extension ObservableType {
     ///
     /// - returns:
     /// 에러가 필터링된 Observable
-    func `catch`(to errorStreamProvider: HasHandleableErrorStream, handler: ErrorHandleable) -> Observable<Element> {
+    func catchAndThrow(to errorStreamProvider: HasHandleableErrorStream, handler: ErrorHandleable) -> Observable<Element> {
         return `catch` { error in
             errorStreamProvider.errorStream.onNext(HandleableError(error, handler: handler))
             return .empty()

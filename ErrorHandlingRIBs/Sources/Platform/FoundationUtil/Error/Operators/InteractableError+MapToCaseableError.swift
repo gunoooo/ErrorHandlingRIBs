@@ -9,7 +9,7 @@
 import Foundation
 
 public extension InteractableError {
-    /// 에러 매핑 함수
+    /// InteractableError -> CaseableError
     /// `type` 형태로 에러를 매핑하고, 타입이 맞지 않은 에러는 `ErrorStream`으로 보내줌
     ///
     /// ```swift
@@ -27,7 +27,7 @@ public extension InteractableError {
     ///
     /// - returns:
     /// `E 타입으로 매핑된 에러`
-    func mapTo<ErrorCase: ErrorCaseable>(type errorCaseType: ErrorCase.Type) -> CaseableErrorContent<ErrorCase>? {
+    func mapTo<ErrorCase: ErrorCaseable>(type errorCaseType: ErrorCase.Type) -> CaseableError<ErrorCase>? {
         guard let error = handleableError.error.mapTo(type: errorCaseType.self) else {
             return nil
         }

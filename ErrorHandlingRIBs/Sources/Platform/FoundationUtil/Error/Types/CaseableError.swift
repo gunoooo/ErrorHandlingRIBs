@@ -1,5 +1,5 @@
 //
-//  CaseableErrorContent.swift
+//  CaseableError.swift
 //  ErrorHandlingRIBs
 //
 //  Created by Gunoo on 2022/02/24.
@@ -8,9 +8,8 @@
 
 import Foundation
 
-public protocol CaseableErrorContentType {}
-
-public struct CaseableErrorContent<ErrorCase: ErrorCaseable>: CaseableErrorContentType {
+/// Enum 형태로 처리가 가능한 에러
+public struct CaseableError<ErrorCase: ErrorCaseable>: Error {
     
     public var errorCase: ErrorCase
     

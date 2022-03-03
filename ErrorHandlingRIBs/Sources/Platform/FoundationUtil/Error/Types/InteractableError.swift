@@ -11,7 +11,7 @@ import Foundation
 /// 상호작용이 가능한 에러
 ///
 /// 다른 `errorStream`으로 현재 에러를  보낼수 있는 형태의 에러
-public struct InteractableError {
+public struct InteractableError: Error {
     
     public var handleableError: HandleableError
     

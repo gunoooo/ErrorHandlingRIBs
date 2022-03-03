@@ -9,6 +9,7 @@
 import Foundation
 
 public extension HandleableError {
+    /// HandleableError -> InteractableError
     func mapToInteractableError(errorStream: HandleableErrorStream) -> InteractableError {
         return InteractableError(self, errorStream: errorStream)
     }

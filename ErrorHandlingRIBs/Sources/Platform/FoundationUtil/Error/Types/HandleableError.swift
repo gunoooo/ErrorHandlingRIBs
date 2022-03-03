@@ -11,7 +11,7 @@ import Foundation
 /// 처리가 가능한 형태의 에러
 ///
 /// 에러 처리를 담당하는 `handler`를 통하여 처리를 실행할수 있는 형태의 에러
-public struct HandleableError {
+public struct HandleableError: Error {
     
     public var error: Error
     

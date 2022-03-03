@@ -29,13 +29,13 @@ public extension Error {
     /// ```
     func mapTo<ErrorCase: ErrorCaseable>(
         type errorCaseType: ErrorCase.Type
-    ) -> CaseableErrorContent<ErrorCase>? {
+    ) -> CaseableError<ErrorCase>? {
         guard let errorContent = self as? ErrorCase.ErrorContent else {
             return nil
         }
         guard let errorCase = errorCaseType.make(from: self) else {
             return nil
         }
-        return CaseableErrorContent(errorCase: errorCase, errorContent: errorContent)
+        return CaseableError(errorCase: errorCase, errorContent: errorContent)
     }
 }

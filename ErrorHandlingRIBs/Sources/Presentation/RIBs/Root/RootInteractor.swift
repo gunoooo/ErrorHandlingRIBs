@@ -23,18 +23,11 @@ protocol RootListener: AnyObject {
 
 protocol RootInteractorDependency: ErrorHandleableInteractorDependency {}
 
-extension RootInteractorDependency {
-    var errorStream: HandleableErrorStream {
-        fatalError("")
-    }
-}
-
 final class RootInteractor: PresentableInteractor<RootPresentable>, 
                             RootInteractable,
                             RootPresentableListener,
                             HasInteractorDependency,
-                            HasInteractableErrorStream,
-                            ErrorHandleable {
+                            ErrorInteractable {
 
     weak var router: RootRouting?
     
