@@ -1,31 +1,21 @@
 //
-//  Error+MapTo.swift
+//  Error.swift
 //  ErrorHandlingRIBs
 //
-//  Created by Gunoo on 2022/02/24.
+//  Created by Gunoo on 2022/03/05.
 //  Copyright © 2022 com.gunoooo. All rights reserved.
 //
 
 import Foundation
 
 public extension Error {
-    /// error를 contentType, caseType 으로 매핑
+    /// Error -> CaseableError
     ///
     /// - returns
-    ///     error가 contentType 과 caseType 에 일치한다면, 매핑된 에러. 일치하지 않는다면 nil
+    ///     `type` 과 일치한다면, 매핑된 에러. 일치하지 않는다면 nil
     ///
     /// ```swift
     ///     error.mapTo(type: LoginErrorCase.self)
-    ///         .map { (errorContent: HasMessage, errorCase: LoginErrorCase) in
-    ///             switch errorCase {
-    ///             case .IDError:
-    ///                 break
-    ///             case .PasswordError:
-    ///                 break
-    ///             case .ConnectionError:
-    ///                 break
-    ///         }
-    ///     }
     /// ```
     func mapTo<ErrorCase: ErrorCaseable>(
         type errorCaseType: ErrorCase.Type

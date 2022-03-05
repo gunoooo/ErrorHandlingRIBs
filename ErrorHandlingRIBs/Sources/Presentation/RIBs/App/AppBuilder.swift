@@ -12,12 +12,11 @@ import RIBs
 final class AppComponent: EmptyComponent,
                           AppInteractorDependency {
     
-    var errorStream: HandleableErrorStream
+    var handleableErrorSubject: HandleableErrorSubject = .init()
     
     var window: UIWindow?
     
     init(window: UIWindow?) {
-        errorStream = .init()
         self.window = window
     }
 }

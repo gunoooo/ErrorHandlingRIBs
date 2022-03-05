@@ -13,7 +13,7 @@ protocol RootDependency: Dependency {}
 final class RootComponent: Component<RootDependency>,
                            RootInteractorDependency {
     
-    override var errorStream: HandleableErrorStream {
+    override var handleableErrorSubject: HandleableErrorSubject {
         shared {
             .init()
         }

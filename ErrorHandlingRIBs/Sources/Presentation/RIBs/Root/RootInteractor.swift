@@ -27,7 +27,7 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
                             RootInteractable,
                             RootPresentableListener,
                             HasInteractorDependency,
-                            ErrorInteractable {
+                            InteractorErrorHandlable {
 
     weak var router: RootRouting?
     

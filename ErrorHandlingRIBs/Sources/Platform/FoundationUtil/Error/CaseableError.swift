@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Enum 형태로 처리가 가능한 에러
+/// Enum case 형태로 처리가 가능한 에러
 public struct CaseableError<ErrorCase: ErrorCaseable>: Error {
     
     public var errorCase: ErrorCase

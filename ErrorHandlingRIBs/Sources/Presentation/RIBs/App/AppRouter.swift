@@ -28,6 +28,10 @@ final class AppRouter: Router<AppInteractable>, AppRouting {
         interactor.router = self
     }
     
+    func activate() {
+        interactor.activate()
+    }
+    
     func attachRoot(window: UIWindow) {
         guard rootRouter == nil else {
             return

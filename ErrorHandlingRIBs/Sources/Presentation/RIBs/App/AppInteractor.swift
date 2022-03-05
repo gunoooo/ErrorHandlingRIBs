@@ -11,10 +11,11 @@ import RIBs
 import RxSwift
 
 protocol AppRouting: Routing {
+    func activate()
     func attachRoot(window: UIWindow)
 }
 
-protocol AppInteractorDependency: HasHandleableErrorStream {
+protocol AppInteractorDependency: HasHandleableErrorSubject {
     var window: UIWindow? { get set }
 }
 
@@ -35,7 +36,7 @@ final class AppInteractor: Interactor,
     override func didBecomeActive() {
         super.didBecomeActive()
         
-        dependency.errorStream
+        dependency.handleableErrorSubject
             .execute(with: { error in
                 return DefaultError(
                     message: "오류가 발생하였습니다. 이용에 불편을 드려 죄송합니다.",

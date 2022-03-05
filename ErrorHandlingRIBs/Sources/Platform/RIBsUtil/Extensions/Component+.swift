@@ -1,5 +1,5 @@
 //
-//  Component+HasDependency.swift
+//  Component+.swift
 //  ErrorHandlingRIBs
 //
 //  Created by Gunoo on 2022/02/16.
@@ -8,4 +8,4 @@
 
 import RIBs
 
-extension Component: HasDependency {}
+extension RIBs.Component: HasDependency {}

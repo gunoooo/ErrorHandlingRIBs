@@ -10,5 +10,5 @@ import Foundation
 
 /// 에러처리가 가능한 `Interactor`의 의존성 주입을 위한 Dependency
 public typealias ErrorHandleableInteractorDependency = InteractorDependency &
-                                                       HasHandleableErrorStream &
-                                                       HasHandleableParentErrorStream
+                                                       HasHandleableErrorSubject &
+                                                       HasHandleableParentErrorSubject
