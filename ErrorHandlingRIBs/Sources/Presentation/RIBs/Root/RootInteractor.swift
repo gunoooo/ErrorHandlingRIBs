@@ -47,15 +47,9 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
         errorStream
             .filter(type: RootErrorCase.Messaging.self) { [weak self] error in
                 switch error.errorCase {
-                    case .SecureError:
-                        // TODO: 알럿처리
-                        self?.listener?.exitApp()
-                }
-            }
-            .filter(type: RootErrorCase.DetailMessaging.self) { error in
-                switch error.errorCase {
-                    case .ConnectionError:
-                        break
+                case .SecureError:
+                    // TODO: 알럿처리
+                    self?.listener?.exitApp()
                 }
             }
             .filterDefault { error in

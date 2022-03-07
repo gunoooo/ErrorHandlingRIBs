@@ -9,6 +9,13 @@
 import Foundation
 import RxSwift
 
-protocol LoginRepositoryProtocol {
-    func login(loginData: LoginData) -> Observable<LoginInfo>
+public protocol LoginRepositoryProtocol {
+    func login(uuid: String, withId: String, withPassword: String) -> Observable<Customer>
+}
+
+public class LoginRepository: LoginRepositoryProtocol {
+    public func login(uuid: String, withId: String, withPassword: String) -> Observable<Customer> {
+        // TODO: Data Passing Logic
+        return .empty()
+    }
 }

@@ -15,10 +15,4 @@ enum RootErrorCase {
         
         case SecureError
     }
-    
-    enum DetailMessaging: ErrorCaseable {
-        typealias ErrorContent = HasMessage & HasDetailMessage
-        
-        case ConnectionError
-    }
 }
