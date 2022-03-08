@@ -10,13 +10,26 @@ import RIBs
 import RxSwift
 import UIKit
 
-protocol IDPasswordLoginPresentableListener: AnyObject {
-    func login(id: String, password: String)
+protocol IDPasswordLoginDisplayLogic: AnyObject {
+    func setTextIDErrorLable(message: String)
+    func setTextPasswordErrorLable(message: String)
+}
+
+protocol IDPasswordLoginViewControllable: ViewControllable {
+    var interactor: IDPasswordLoginBusinessLogic? { get set }
 }
 
 final class IDPasswordLoginViewController: UIViewController,
-                                           IDPasswordLoginPresentable,
-                                           IDPasswordLoginViewControllable {
-
-    weak var listener: IDPasswordLoginPresentableListener?
+                                           IDPasswordLoginViewControllable,
+                                           IDPasswordLoginDisplayLogic {
+    
+    weak var interactor: IDPasswordLoginBusinessLogic?
+    
+    func setTextIDErrorLable(message: String) {
+        // TODO: 아이디 필드 하단에 error message 표현
+    }
+    
+    func setTextPasswordErrorLable(message: String) {
+        // TODO: 비밀번호 필드 하단에 error message 표현
+    }
 }

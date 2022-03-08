@@ -1,5 +1,5 @@
 //
-//  AppComponent.swift
+//  AppComponent+.swift
 //  ErrorHandlingRIBs
 //
 //  Created by Gunoo on 2022/02/20.

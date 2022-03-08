@@ -8,21 +8,10 @@
 
 import RIBs
 
-protocol IDPasswordLoginInteractable: Interactable {
-    var router: IDPasswordLoginRouting? { get set }
-    var listener: IDPasswordLoginListener? { get set }
-}
+protocol IDPasswordLoginRouting: ViewableRouting {}
 
-protocol IDPasswordLoginViewControllable: ViewControllable {
-    // TODO: Declare methods the router invokes to manipulate the view hierarchy.
-}
+protocol IDPasswordLoginRoutingLogic: AnyObject {}
 
 final class IDPasswordLoginRouter: ViewableRouter<IDPasswordLoginInteractable, IDPasswordLoginViewControllable>,
-                                   IDPasswordLoginRouting {
-
-    // TODO: Constructor inject child builder protocols to allow building children.
-    override init(interactor: IDPasswordLoginInteractable, viewController: IDPasswordLoginViewControllable) {
-        super.init(interactor: interactor, viewController: viewController)
-        interactor.router = self
-    }
-}
+                                   IDPasswordLoginRouting,
+                                   IDPasswordLoginRoutingLogic {}

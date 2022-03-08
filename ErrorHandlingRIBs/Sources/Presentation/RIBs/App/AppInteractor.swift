@@ -10,9 +10,12 @@ import UIKit
 import RIBs
 import RxSwift
 
-protocol AppRouting: Routing {
-    func activate()
-    func attachRoot(window: UIWindow)
+protocol AppBusinessLogic: AnyObject {}
+
+protocol AppInteractable: Interactable,
+                          RootListener {
+    
+    var router: AppRoutingLogic? { get set }
 }
 
 protocol AppInteractorDependency: HasHandleableErrorSubject {
@@ -24,7 +27,7 @@ final class AppInteractor: Interactor,
                            AppLifecycleDelegate,
                            HasInteractorDependency {
 
-    weak var router: AppRouting?
+    weak var router: AppRoutingLogic?
     
     var dependency: AppInteractorDependency
     

@@ -10,9 +10,7 @@ import RxSwift
 
 // MARK: - Input/Output
 
-public protocol LoginInput {
-    var uuid: String { get }
-}
+public protocol LoginInput {}
 
 public struct LoginOutput {
     public let customer: Customer
@@ -23,19 +21,4 @@ public struct LoginOutput {
 public protocol LoginUseCaseProtocol {
     associatedtype Input: LoginInput
     func execute(input: Input) -> Observable<LoginOutput>
-}
-
-// MARK: - UseCase Impl
-
-public class LoginUseCase<Input: LoginInput>: LoginUseCaseProtocol {
-    
-    public let loginRepository: LoginRepositoryProtocol
-    
-    public init(loginRepository: LoginRepositoryProtocol) {
-        self.loginRepository = loginRepository
-    }
-    
-    public func execute(input: Input) -> Observable<LoginOutput> {
-        return .never()
-    }
 }

@@ -9,7 +9,7 @@
 import RIBs
 
 protocol IDPasswordLoginDependency: Dependency {
-    var uuid: String { get }
+    var deviceRepository: DeviceRepositoryProtocol { get }
 }
 
 final class IDPasswordLoginComponent: Component<IDPasswordLoginDependency>,
@@ -21,13 +21,12 @@ final class IDPasswordLoginComponent: Component<IDPasswordLoginDependency>,
         }
     }
     
-    var uuid: String {
-        dependency.uuid
-    }
-    
     var idPasswordLoginUseCase: IDPasswordLoginUseCase {
         shared {
-            .init(loginRepository: LoginRepository())
+            .init(
+                loginRepository: LoginRepository(),
+                deviceRepository: dependency.deviceRepository
+            )
         }
     }
 }
@@ -46,9 +45,16 @@ final class IDPasswordLoginBuilder: Builder<IDPasswordLoginDependency>, IDPasswo
 
     func build(withListener listener: IDPasswordLoginListener) -> IDPasswordLoginRouting {
         let component = IDPasswordLoginComponent(dependency: dependency)
+        let presenter = IDPasswordLoginPresenter()
         let viewController = IDPasswordLoginViewController()
-		let interactor = IDPasswordLoginInteractor(dependency: component, presenter: viewController)
+		let interactor = IDPasswordLoginInteractor(dependency: component, presenter: presenter)
+        let router = IDPasswordLoginRouter(interactor: interactor, viewController: viewController)
+        
+        presenter.viewController = viewController
+        viewController.interactor = interactor
         interactor.listener = listener
-        return IDPasswordLoginRouter(interactor: interactor, viewController: viewController)
+        interactor.router = router
+        
+        return router
     }
 }

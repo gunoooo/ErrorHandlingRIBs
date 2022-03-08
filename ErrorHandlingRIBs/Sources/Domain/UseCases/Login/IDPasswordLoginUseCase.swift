@@ -17,24 +17,36 @@ public enum IDPasswordLoginErrorCase: ErrorCaseable {
     case WrongPasswordError
 }
 
-public typealias IDPasswordLoginUseCaseError = CaseableError<IDPasswordLoginErrorCase>
-
-// MARK: - Input/Output
+// MARK: - Input
 
 public struct IDPasswordLoginInput: LoginInput {
-    public let uuid: String
     public let id: String
     public let password: String
 }
 
-// MARK: - ID Password Login Impl
+// MARK: - UseCase Protocol
 
-public typealias IDPasswordLoginUseCase = LoginUseCase<IDPasswordLoginInput>
+public protocol IDPasswordLoginUseCaseProtocol: LoginUseCaseProtocol where Input == IDPasswordLoginInput {
+    func execute(input: Input) -> Observable<LoginOutput>
+}
 
-public extension LoginUseCase where Input == IDPasswordLoginInput {
+// MARK: - UseCase Impl
+
+public final class IDPasswordLoginUseCase: IDPasswordLoginUseCaseProtocol {
     
-    func execute(input: Input) -> Observable<LoginOutput> {
-        return loginRepository.login(uuid: input.uuid, withId: input.id, withPassword: input.password)
+    let loginRepository: LoginRepositoryProtocol
+    let deviceRepository: DeviceRepositoryProtocol
+    
+    public init(
+        loginRepository: LoginRepositoryProtocol,
+        deviceRepository: DeviceRepositoryProtocol
+    ) {
+        self.loginRepository = loginRepository
+        self.deviceRepository = deviceRepository
+    }
+    
+    public func execute(input: IDPasswordLoginInput) -> Observable<LoginOutput> {
+        return loginRepository.login(uuid: deviceRepository.uuid, withId: input.id, withPassword: input.password)
             .map { LoginOutput(customer: $0) }
             .catch { throw $0.mapTo(type: IDPasswordLoginErrorCase.self) ?? $0 }
     }

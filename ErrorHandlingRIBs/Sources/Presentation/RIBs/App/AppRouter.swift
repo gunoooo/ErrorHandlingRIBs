@@ -9,12 +9,16 @@
 import UIKit
 import RIBs
 
-protocol AppInteractable: Interactable,
-                          RootListener {
-    var router: AppRouting? { get set }
+protocol AppRoutingLogic: AnyObject {
+    func activate()
+    func attachRoot(window: UIWindow)
 }
 
-final class AppRouter: Router<AppInteractable>, AppRouting {
+protocol AppRouting: Routing {}
+
+final class AppRouter: Router<AppInteractable>,
+                       AppRouting,
+                       AppRoutingLogic {
 
     private let rootBuilder: RootBuildable
     private var rootRouter: LaunchRouting?

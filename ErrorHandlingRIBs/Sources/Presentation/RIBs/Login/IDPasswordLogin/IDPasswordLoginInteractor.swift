@@ -9,12 +9,13 @@
 import RIBs
 import RxSwift
 
-protocol IDPasswordLoginRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+protocol IDPasswordLoginBusinessLogic: AnyObject {
+    func login(input: IDPasswordLoginInput)
 }
 
-protocol IDPasswordLoginPresentable: Presentable {
-    var listener: IDPasswordLoginPresentableListener? { get set }
+protocol IDPasswordLoginInteractable: Interactable {
+    var router: IDPasswordLoginRoutingLogic? { get set }
+    var listener: IDPasswordLoginListener? { get set }
 }
 
 protocol IDPasswordLoginListener: AnyObject {
@@ -22,54 +23,47 @@ protocol IDPasswordLoginListener: AnyObject {
 }
 
 protocol IDPasswordLoginInteractorDependency: ErrorHandleableInteractorDependency {
-    var uuid: String { get }
     var idPasswordLoginUseCase: IDPasswordLoginUseCase { get }
 }
 
-final class IDPasswordLoginInteractor: PresentableInteractor<IDPasswordLoginPresentable>,
+final class IDPasswordLoginInteractor: PresentableInteractor<IDPasswordLoginPresentationLogic>,
                                        IDPasswordLoginInteractable,
-                                       IDPasswordLoginPresentableListener,
+                                       IDPasswordLoginBusinessLogic,
                                        HasInteractorDependency,
                                        InteractorErrorHandlable {
-
-    weak var router: IDPasswordLoginRouting?
+    
+    weak var router: IDPasswordLoginRoutingLogic?
     
     weak var listener: IDPasswordLoginListener?
     
     let dependency: IDPasswordLoginInteractorDependency
     
-    init(dependency: IDPasswordLoginInteractorDependency, presenter: IDPasswordLoginPresentable) {
+    init(dependency: IDPasswordLoginInteractorDependency, presenter: IDPasswordLoginPresentationLogic) {
         self.dependency = dependency
         super.init(presenter: presenter)
-        presenter.listener = self
     }
 
     override func didBecomeActive() {
         super.didBecomeActive()
         
-		errorStream
+        errorStream
             .filterDefault { error in
                 // TODO: 알럿 처리
             }
             .send()
-			.disposeOnDeactivate(interactor: self)
-    }
-
-    override func willResignActive() {
-        super.willResignActive()
-        // TODO: Pause any business logic.
+            .disposeOnDeactivate(interactor: self)
     }
     
-    func login(id: String, password: String) {
+    func login(input: IDPasswordLoginInput) {
         dependency.idPasswordLoginUseCase
-            .execute(input: .init(uuid: dependency.uuid, id: id, password: password))
+            .execute(input: input)
             .take(1)
-            .filter(type: IDPasswordLoginErrorCase.self) { error in
+            .filter(type: IDPasswordLoginErrorCase.self) { [weak self] error in
                 switch error.errorCase {
                 case .WrongIDError:
-                    break
+                    self?.presenter.presentWrongIDError(wrongIDError: error.errorContent)
                 case .WrongPasswordError:
-                    break
+                    self?.presenter.presentWrongPasswordError(wrongPasswordError: error.errorContent)
                 }
             }
             .catchAndThrow(to: self)
