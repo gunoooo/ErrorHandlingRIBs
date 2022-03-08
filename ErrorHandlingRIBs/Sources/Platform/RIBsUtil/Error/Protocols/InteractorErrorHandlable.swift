@@ -11,14 +11,20 @@ import RxSwift
 public protocol InteractorErrorHandlable: ErrorHandleable, HasErrorHandleableInteractorDependency {
     /// 현재 Interactor에서 핸들링 할 InteractableError Observable
     var errorStream: Observable<InteractableError> { get }
+    /// 에러 처리 함수
+    func handleError(errorStream: Observable<InteractableError>) -> Observable<InteractableError>
 }
 
 public extension InteractorErrorHandlable {
     var errorStream: Observable<InteractableError> {
-        return errorHandlingInteractorDependency.handleableErrorSubject
+        errorHandlingInteractorDependency.handleableErrorSubject
             .map {
                 $0.mapToInteractableError(handleableErrorSubject: errorHandlingInteractorDependency.parentHandleableErrorSubject)
             }
+    }
+    
+    func handleError(errorStream: Observable<InteractableError>) -> Observable<InteractableError> {
+        errorStream
     }
 }
 

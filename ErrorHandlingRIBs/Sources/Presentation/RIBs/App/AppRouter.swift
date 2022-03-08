@@ -10,11 +10,12 @@ import UIKit
 import RIBs
 
 protocol AppRoutingLogic: AnyObject {
-    func activate()
     func attachRoot(window: UIWindow)
 }
 
-protocol AppRouting: Routing {}
+protocol AppRouting: Routing {
+    func activate()
+}
 
 final class AppRouter: Router<AppInteractable>,
                        AppRouting,

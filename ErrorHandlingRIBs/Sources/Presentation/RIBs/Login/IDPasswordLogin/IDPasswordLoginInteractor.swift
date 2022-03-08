@@ -46,12 +46,16 @@ final class IDPasswordLoginInteractor: PresentableInteractor<IDPasswordLoginPres
     override func didBecomeActive() {
         super.didBecomeActive()
         
+        handleError(errorStream: errorStream)
+            .send()
+            .disposeOnDeactivate(interactor: self)
+    }
+    
+    func handleError(errorStream: Observable<InteractableError>) -> Observable<InteractableError> {
         errorStream
             .filterDefault { error in
                 // TODO: 알럿 처리
             }
-            .send()
-            .disposeOnDeactivate(interactor: self)
     }
     
     func login(input: IDPasswordLoginInput) {

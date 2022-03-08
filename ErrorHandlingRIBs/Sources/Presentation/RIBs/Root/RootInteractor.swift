@@ -44,6 +44,12 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
     override func didBecomeActive() {
         super.didBecomeActive()
         
+        handleError(errorStream: errorStream)
+            .send()
+            .disposeOnDeactivate(interactor: self)
+    }
+    
+    func handleError(errorStream: Observable<InteractableError>) -> Observable<InteractableError> {
         errorStream
             .filter(type: RootErrorCase.Messaging.self) { [weak self] error in
                 switch error.errorCase {
@@ -55,7 +61,5 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
             .filterDefault { error in
                 // TODO: 알럿처리
             }
-            .send()
-            .disposeOnDeactivate(interactor: self)
     }
 }
